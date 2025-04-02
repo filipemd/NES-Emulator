@@ -700,7 +700,7 @@ static uint16_t get_address(c6502* ctx){
             lo = read_mem(ctx->memory, addr);
             // handle a bug in 6502 hardware where if reading from $xxFF (page boundary) the
             // LSB is read from $xxFF as expected but the MSB is fetched from xx00
-            hi = read_mem(ctx->memory, (addr & 0xFF00) | (addr + 1) & 0xFF);
+            hi = read_mem(ctx->memory, (addr & 0xFF00) | ((addr + 1) & 0xFF));
             return (hi << 8) | lo;
         case IDX_IND:
             addr = (read_mem(ctx->memory, ctx->pc++) + ctx->x) & 0xFF;

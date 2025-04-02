@@ -94,7 +94,7 @@ void read_text_stream(char** list, const char* buf, size_t list_len, size_t buf_
                 c = buf[offset++];
             }
             // add ellipsis at the end to show content is truncated
-            strncpy(list[str] + max_str_len - 3, "...", 3);
+            strncpy(list[str] + max_str_len - 3, "..", 3);
             // reset to just before null byte if there is still stuff to be read
             if(offset < buf_len)
                 offset--;
@@ -275,12 +275,12 @@ void load_nsfe(SDL_RWops* file, Mapper* mapper) {
     memset(mapper->PRG_RAM, 0, PRG_RAM_SIZE);
 
     // mapper R/W redirects
-    mapper->read_PRG = read_PRG;
+    mapper->read_PRG = (uint8_t(*)(struct Mapper*, uint16_t))read_PRG;
     mapper->write_PRG = write_PRG;
     mapper->read_CHR = read_CHR;
     mapper->write_CHR = write_CHR;
     mapper->read_ROM = read_ROM;
-    mapper->write_ROM = write_ROM;
+    mapper->write_ROM = (void(*)(struct Mapper*, uint16_t, uint8_t))write_ROM;
 
     // skip the header
     int64_t offset = 4;
@@ -292,10 +292,10 @@ void load_nsfe(SDL_RWops* file, Mapper* mapper) {
     mapper->NSF = nsf;
 
     // defaults
-    strncpy(nsf->song_name, "<?>", 3);
-    strncpy(nsf->artist, "<?>", 3);
-    strncpy(nsf->copyright, "<?>", 3);
-    strncpy(nsf->ripper, "<?>", 3);
+    strncpy(nsf->song_name, "<?>", 4);
+    strncpy(nsf->artist, "<?>", 4);
+    strncpy(nsf->copyright, "<?>", 4);
+    strncpy(nsf->ripper, "<?>", 4);
 
     uint32_t len;
     int has_info = 0;
@@ -391,8 +391,11 @@ void load_nsf(SDL_RWops* file, Mapper* mapper) {
     nsf->play_addr = (header[0xd] << 8) | header[0xc];
 
     strncpy(nsf->song_name, (char*)(header + 0xe), TEXT_FIELD_SIZE);
+    nsf->song_name[TEXT_FIELD_SIZE-1]='\0';
     strncpy(nsf->artist, (char*)(header + 0x2e), TEXT_FIELD_SIZE);
+    nsf->artist[TEXT_FIELD_SIZE-1]='\0';
     strncpy(nsf->copyright, (char*)(header + 0x4e), TEXT_FIELD_SIZE);
+    nsf->copyright[TEXT_FIELD_SIZE-1]='\0';
 
     LOG(INFO, "SONG_NAME: %s", nsf->song_name);
     LOG(INFO, "ARTIST: %s", nsf->artist);
@@ -450,12 +453,12 @@ void load_nsf(SDL_RWops* file, Mapper* mapper) {
     memset(mapper->PRG_RAM, 0, PRG_RAM_SIZE);
 
     // mapper R/W redirects
-    mapper->read_PRG = read_PRG;
+    mapper->read_PRG = (uint8_t(*)(struct Mapper*, uint16_t))read_PRG;
     mapper->write_PRG = write_PRG;
     mapper->read_CHR = read_CHR;
     mapper->write_CHR = write_CHR;
     mapper->read_ROM = read_ROM;
-    mapper->write_ROM = write_ROM;
+    mapper->write_ROM = (void(*)(struct Mapper*, uint16_t, uint8_t))write_ROM;
 
 
     if(nsf->bank_switch) {
@@ -592,8 +595,8 @@ void init_NSF_gfx(GraphicsContext* g_ctx, NSF* nsf) {
         bin_boundaries[i] = exp((log(20000) - log(20))*i/(double)BAR_COUNT) * 20;
     }
     bin_boundaries[BAR_COUNT] = 20000;
-    char buf[144] = {0};
-    snprintf(buf, 144, "song: %s \nartist: %s \ncopyright: %s", nsf->song_name, nsf->artist, nsf->copyright);
+    char buf[256] = {0};
+    snprintf(buf, sizeof(buf)/sizeof(buf[0]), "song: %s \nartist: %s \ncopyright: %s", nsf->song_name, nsf->artist, nsf->copyright);
     SDL_Color color = {192, 0x30, 0x0, 0xff};
     SDL_Surface* text_surf = TTF_RenderUTF8_Solid_Wrapped(g_ctx->font, buf, color, 0);
     nsf->song_info_tx = SDL_CreateTextureFromSurface(g_ctx->renderer, text_surf);
@@ -721,7 +724,8 @@ void render_NSF_graphics(Emulator* emulator, NSF* nsf) {
         if(nsf->times != NULL) {
             SDL_FreeSurface(text_surf);
             SDL_DestroyTexture(nsf->song_dur_max_tx);
-            snprintf(str, 8, "%02d : %02d", nsf->tick_max / 60000, ((long)nsf->tick_max % 60000) / 1000);
+            snprintf(str, 24, "%02d : %02ld", nsf->tick_max / 60000, ((long)nsf->tick_max % 60000) / 1000);
+
             SDL_Color color1 = {0x0, 0x30, 192, 0xff};
             text_surf = TTF_RenderText_Solid(g_ctx->font, str, color1);
             nsf->song_dur_max_tx = SDL_CreateTextureFromSurface(g_ctx->renderer, text_surf);
@@ -754,9 +758,9 @@ void render_NSF_graphics(Emulator* emulator, NSF* nsf) {
 
         if(cur_min != minutes || cur_sec != seconds) {
             SDL_DestroyTexture(nsf->song_dur_tx);
-            char str[8];
+            char str[12];
             SDL_Color color = {0x0, 0x30, 192, 0xff};
-            snprintf(str, 8, "%02d : %02d", cur_min, cur_sec);
+            snprintf(str, sizeof(str)/sizeof(str[0]), "%02d : %02d", cur_min, cur_sec);
             SDL_Surface* text_surf = TTF_RenderText_Solid(g_ctx->font, str, color);
             nsf->song_dur_tx = SDL_CreateTextureFromSurface(g_ctx->renderer, text_surf);
             nsf->song_dur_rect.h = text_surf->h;

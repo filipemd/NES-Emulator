@@ -383,7 +383,7 @@ static uint16_t render_background(PPU* ppu){
         return 0;
 
     uint8_t attr = read_vram(ppu, attr_addr);
-    return palette_addr | (((attr >> ((ppu->v >> 4) & 4 | ppu->v & 2)) & 0x3) << 2);
+    return palette_addr | (((attr >> (((ppu->v >> 4) & 4) | (ppu->v & 2))) & 0x3) << 2);
 }
 
 static uint16_t render_sprites(PPU* restrict ppu, uint16_t bg_addr, uint8_t* restrict back_priority){
@@ -415,7 +415,7 @@ static uint16_t render_sprites(PPU* restrict ppu, uint16_t bg_addr, uint8_t* res
         uint16_t tile_addr;
 
         if (ppu->ctrl & LONG_SPRITE) {
-            y_off = y_off & 7 | ((y_off & 8) << 1);
+            y_off = (y_off & 7) | ((y_off & 8) << 1);
             tile_addr = (tile >> 1) * 32 + y_off;
             tile_addr |= (tile & 1) << 12;
         } else {

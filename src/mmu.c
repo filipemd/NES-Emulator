@@ -119,7 +119,7 @@ void write_mem(Memory* mem, uint16_t address, uint8_t value){
             case JOY1:
                 write_joypad(&mem->joy1, value);
                 write_joypad(&mem->joy2, value);
-                mem->bus = (old & 0xf0) | value & 0xf;
+                mem->bus = (old & 0xf0) | (value & 0xf);
                 break;
             case APU_P1_CTRL:
                 set_pulse_ctrl(&apu->pulse1, value);

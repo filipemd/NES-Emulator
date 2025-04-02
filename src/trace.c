@@ -151,7 +151,7 @@ void print_cpu_trace(const c6502* ctx){
                 address_str,
                 "($%04X) = %04X            ",
                 addr,
-                ((uint16_t)read_mem(ctx->memory, (addr & 0xFF00) | (addr + 1) & 0xFF) << 8) | read_mem(ctx->memory, addr)
+                ((uint16_t)read_mem(ctx->memory, (addr & 0xFF00) | ((addr + 1) & 0xFF) << 8)) | read_mem(ctx->memory, addr)
             );
             break;
         case IDX_IND:

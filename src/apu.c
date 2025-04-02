@@ -584,7 +584,7 @@ void set_pulse_ctrl(Pulse *pulse, uint8_t value) {
 }
 
 void set_pulse_timer(Pulse *pulse, uint8_t value) {
-    pulse->t.period = pulse->t.period & ~0xff | value;
+    pulse->t.period = (pulse->t.period & ~0xff) | value;
     update_target_period(pulse);
 }
 
@@ -599,7 +599,7 @@ void set_pulse_sweep(Pulse *pulse, uint8_t value) {
 }
 
 void set_pulse_length_counter(Pulse *pulse, uint8_t value) {
-    pulse->t.period = pulse->t.period & 0xff | (value & 0x7) << 8;
+    pulse->t.period = (pulse->t.period & 0xff) | (value & 0x7) << 8;
     if (pulse->enabled)
         pulse->l = length_counter_lookup[value >> 3];
     update_target_period(pulse);
@@ -612,11 +612,11 @@ void set_tri_counter(Triangle *triangle, uint8_t value) {
 }
 
 void set_tri_timer_low(Triangle *triangle, uint8_t value) {
-    triangle->sequencer.period = triangle->sequencer.period & ~0xff | value;
+    triangle->sequencer.period = (triangle->sequencer.period & ~0xff) | value;
 }
 
 void set_tri_length(Triangle *triangle, uint8_t value) {
-    triangle->sequencer.period = triangle->sequencer.period & 0xff | (value & 0x7) << 8;
+    triangle->sequencer.period = (triangle->sequencer.period & 0xff) | (value & 0x7) << 8;
     triangle->linear_reload_flag = 1;
     if (triangle->enabled)
         triangle->length_counter = length_counter_lookup[value >> 3];

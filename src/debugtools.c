@@ -62,7 +62,7 @@ void render_name_tables(struct PPU* ppu, uint32_t* screen) {
                 uint8_t hi = read_vram(ppu, bank + read_vram(ppu, 0x2000 + n) * 16 + y + 8);;
 
                 for (int x = 7; x >= 0; x--) {
-                    uint8_t value = ((hi & BIT_0) << 1) | lo & BIT_0;
+                    uint8_t value = ((hi & BIT_0) << 1) | (lo & BIT_0);
                     uint32_t color = value == 0 ? nes_palette[ppu->palette[0]] : nes_palette[*(palette + value)];
                     hi >>= 1;
                     lo >>= 1;

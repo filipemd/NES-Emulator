@@ -232,21 +232,21 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
     uint8_t header[INES_HEADER_SIZE];
     SDL_RWread(file, header, INES_HEADER_SIZE, 1);
 
-    if(strncmp(header, "NESM\x1A", 5) == 0){
+    if(strncmp((char*)header, "NESM\x1A", 5) == 0){
         LOG(INFO, "Using NSF format");
         load_nsf(file, mapper);
         SDL_RWclose(file);
         return;
     }
 
-    if(strncmp(header, "NSFE", 4) == 0){
+    if(strncmp((char*)header, "NSFE", 4) == 0){
         LOG(INFO, "Using NSFe format");
         load_nsfe(file, mapper);
         SDL_RWclose(file);
         return;
     }
 
-    if(strncmp(header, "NES\x1A", 4) != 0){
+    if(strncmp((char*)header, "NES\x1A", 4) != 0){
         LOG(ERROR, "unknown file format");
         quit(EXIT_FAILURE);
     }
