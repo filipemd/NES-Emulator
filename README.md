@@ -4,6 +4,9 @@ Fork de [https://github.com/ObaraEmmanuel/NES](https://github.com/ObaraEmmanuel/
 
 Meu objetivo com esse emulador é aprender um pouco mais sobre programação adicionando algumas funcionalidades não presentes no código, além de, talvez, reescrever parte do projeto em Rust. O projeto original usa a licensa MIT; entretanto, este usa a licensa GPL.
 
+Mudanças feitas ao programa original:
+ - Suporte a salvar o jogo.
+
 README.md original:
 
 # An NES emulator written in pure C
