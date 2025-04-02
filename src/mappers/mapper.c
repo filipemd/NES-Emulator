@@ -44,8 +44,6 @@
 #include <string.h>
 #include <SDL2/SDL_rwops.h>
 
-#include <libgen.h>
-
 #include "mapper.h"
 #include "emulator.h"
 #include "genie.h"
@@ -222,7 +220,7 @@ static void write_CHR(Mapper* mapper, uint16_t address, uint8_t value){
 
 
 void load_file(char* file_name, char* game_genie, Mapper* mapper){
-    char *basename_file_name = basename(file_name);
+    char *basename_file_name = get_file_name(file_name);
 
     const size_t save_file_name_size = strlen(basename_file_name)+5;
     save_file_name = calloc(save_file_name_size, sizeof(basename_file_name[0]));
@@ -388,6 +386,7 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
         } else {
             if (fread(mapper->PRG_RAM, 1, mapper->RAM_size, file) != mapper->RAM_size) {
                 LOG(ERROR, "Error loading save file!\n");
+                return;
             }
             fclose(file);
         }
