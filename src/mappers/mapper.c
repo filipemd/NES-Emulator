@@ -44,11 +44,15 @@
 #include <string.h>
 #include <SDL2/SDL_rwops.h>
 
+#include <libgen.h>
+
 #include "mapper.h"
 #include "emulator.h"
 #include "genie.h"
 #include "utils.h"
 #include "nsf.h"
+
+static char* save_file_name;
 
 static void select_mapper(Mapper*  mapper);
 static void set_mapping(Mapper* mapper, uint16_t tr, uint16_t tl, uint16_t br, uint16_t bl);
@@ -180,9 +184,9 @@ static void write_ROM(Mapper* mapper, uint16_t address, uint8_t value){
 
     if(address < 0x8000){
         // extended ram
-        if(mapper->PRG_RAM != NULL)
+        if(mapper->PRG_RAM != NULL) {
             mapper->PRG_RAM[address - 0x6000] = value;
-        else {
+        } else {
             LOG(DEBUG, "Attempted to write to non existent PRG RAM");
         }
         return;
@@ -218,6 +222,12 @@ static void write_CHR(Mapper* mapper, uint16_t address, uint8_t value){
 
 
 void load_file(char* file_name, char* game_genie, Mapper* mapper){
+    char *basename_file_name = basename(file_name);
+
+    const size_t save_file_name_size = strlen(basename_file_name)+5;
+    save_file_name = calloc(save_file_name_size, sizeof(basename_file_name[0]));
+    snprintf(save_file_name, save_file_name_size, "%s.sav", basename_file_name);
+
     SDL_RWops *file;
     file = SDL_RWFromFile(file_name, "rb");
 
@@ -281,6 +291,9 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
 
     if(header[6] & BIT_1){
         LOG(INFO, "Uses Battery backed save RAM 8KB");
+        mapper->have_battery_backed_sram=1;
+    } else {
+        mapper->have_battery_backed_sram=0;
     }
 
     if(header[6] & BIT_2) {
@@ -365,7 +378,19 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
 
     if(mapper->RAM_size) {
         mapper->PRG_RAM = malloc(mapper->RAM_size);
-        memset(mapper->PRG_RAM, 0, mapper->RAM_size);
+
+        /*
+            Carrega o jogo se ele exisitr
+        */
+        FILE *file = fopen(save_file_name, "rb");
+        if (file == NULL || !mapper->have_battery_backed_sram) {
+            memset(mapper->PRG_RAM, 0, mapper->RAM_size);
+        } else {
+            if (fread(mapper->PRG_RAM, 1, mapper->RAM_size, file) != mapper->RAM_size) {
+                LOG(ERROR, "Error loading save file!\n");
+            }
+            fclose(file);
+        }
     }
 
     if(mapper->format != NES2) {
@@ -430,8 +455,24 @@ void free_mapper(Mapper* mapper){
         free(mapper->PRG_ROM);
     if(mapper->CHR_ROM != NULL)
         free(mapper->CHR_ROM);
-    if(mapper->PRG_RAM != NULL)
+    if(mapper->PRG_RAM != NULL) {
+        // Apenas se o cartucho tiver a capacidade de salvar jogos
+        if (mapper->have_battery_backed_sram) {
+            /*
+                Salva o jogo se ele exisitr
+            */
+            FILE *file = fopen(save_file_name, "wb");
+            if (file == NULL) {
+                perror("Failed to open save file");
+            } else {
+                fwrite(mapper->PRG_RAM, 1, mapper->RAM_size, file);
+
+                fclose(file);
+            }
+        }
+
         free(mapper->PRG_RAM);
+    }
     if(mapper->extension != NULL)
         free(mapper->extension);
     if(mapper->genie != NULL)
