@@ -51,8 +51,8 @@ void init_mem(Emulator* emulator){
     mem->mapper = &emulator->mapper;
 
     memset(mem->RAM, 0, RAM_SIZE);
-    init_joypad(&mem->joy1, 0);
-    init_joypad(&mem->joy2, 1);
+    init_joypad(&mem->joy1, 0, emulator->settings.multiple_controllers_in_one_keyboard);
+    init_joypad(&mem->joy2, 1, emulator->settings.multiple_controllers_in_one_keyboard);
 }
 
 uint8_t* get_ptr(Memory* mem, uint16_t address){

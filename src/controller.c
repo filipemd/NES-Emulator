@@ -45,11 +45,13 @@
 #include "touchpad.h"
 
 
-void init_joypad(struct JoyPad* joyPad, uint8_t player){
+void init_joypad(struct JoyPad* joyPad, uint8_t player, bool multiple_controllers_in_one_keyboard) {
     joyPad->strobe = 0;
     joyPad->index = 0;
     joyPad->status = 0;
     joyPad->player = player;
+
+    joyPad->multiple_controllers_in_one_keyboard=multiple_controllers_in_one_keyboard;
 }
 
 
@@ -69,41 +71,101 @@ void write_joypad(struct JoyPad* joyPad, uint8_t data){
         joyPad->index = 0;
 }
 
-void keyboard_mapper(struct JoyPad* joyPad, SDL_Event* event){
-    uint16_t key = 0;
+
+// Se apenas um controle for utilizado
+uint16_t generic_keyboard_mapper(SDL_Event* event) {
     switch (event->key.keysym.sym) {
         case SDLK_RIGHT:
-            key = RIGHT;
-            break;
+            return RIGHT;
         case SDLK_LEFT:
-            key = LEFT;
-            break;
+            return LEFT;
         case SDLK_DOWN:
-            key = DOWN;
-            break;
+            return DOWN;
         case SDLK_UP:
-            key = UP;
-            break;
+            return UP;
         case SDLK_RETURN:
-            key = START;
-            break;
+            return START;
         case SDLK_RSHIFT:
-            key = SELECT;
-            break;
+            return SELECT;
         case SDLK_j:
-            key = BUTTON_A;
-            break;
+            return BUTTON_A;
         case SDLK_k:
-            key = BUTTON_B;
-            break;
+            return BUTTON_B;
         case SDLK_l:
-            key = TURBO_B;
-            break;
+            return TURBO_B;
         case SDLK_h:
-            key = TURBO_A;
-            break;
-
+            return TURBO_A;
+        default:
+            return 0;
     }
+    return 0;
+}
+
+uint16_t player1_keyboard_mapper(SDL_Event* event) {
+    switch (event->key.keysym.sym) {
+        case SDLK_d:
+            return RIGHT;
+        case SDLK_a:
+            return LEFT;
+        case SDLK_s:
+            return DOWN;
+        case SDLK_w:
+            return UP;
+        case SDLK_TAB:
+            return START;
+        case SDLK_LSHIFT:
+            return SELECT;
+        case SDLK_q:
+            return BUTTON_A;
+        case SDLK_e:
+            return BUTTON_B;
+        case SDLK_z:
+            return TURBO_A;
+        case SDLK_c:
+            return TURBO_B;
+        default:
+            return 0;
+    }
+    return 0;
+}
+
+uint16_t player2_keyboard_mapper(SDL_Event* event) {
+    switch (event->key.keysym.sym) {
+        case SDLK_l:
+            return RIGHT;
+        case SDLK_j:
+            return LEFT;
+        case SDLK_k:
+            return DOWN;
+        case SDLK_i:
+            return UP;
+        case SDLK_RETURN:
+            return START;
+        case SDLK_RSHIFT:
+            return SELECT;
+        case SDLK_u:
+            return BUTTON_A;
+        case SDLK_o:
+            return BUTTON_B;
+        case SDLK_n:
+            return TURBO_A;
+        case SDLK_m:
+            return TURBO_B;
+        default:
+            return 0;
+    }
+    return 0;
+}
+
+void keyboard_mapper(struct JoyPad* joyPad, SDL_Event* event){
+    uint16_t key=0;
+    if (joyPad->multiple_controllers_in_one_keyboard) {
+        if (joyPad->player==0) key = player1_keyboard_mapper(event);
+        else if (joyPad->player==1) key = player2_keyboard_mapper(event);
+    } else {
+        key = generic_keyboard_mapper(event);
+    }
+
     if(event->type == SDL_KEYUP) {
         joyPad->status &= ~key;
         if(key == TURBO_A) {

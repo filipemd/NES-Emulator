@@ -46,9 +46,20 @@
 #include <string.h>
 
 int main(int argc, char *argv[]){
-    if (argc==2 && strcmp(argv[1], "w")==0) {
-        printf("THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\nAPPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\nHOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY\nOF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nTHE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM\nIS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF\nALL NECESSARY SERVICING, REPAIR OR CORRECTION.\n");
-        return 0;
+    if (argc>=2) {
+        if (strcmp(argv[1], "w")==0) {
+            printf("THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\nAPPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\nHOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY\nOF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nTHE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM\nIS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF\nALL NECESSARY SERVICING, REPAIR OR CORRECTION.\n");
+            return 0;
+        } else if (strcmp(argv[1], "--help")==0 || strcmp(argv[1], "-h")==0) {
+            printf(
+                "Usage: ./nes filename [options...]\n"
+                "Options:\n"
+                "  --help                     Show this help message\n"
+                "  -genie <file>              Specify the genie file to load\n"
+                "  --multiplayer              Enable multiple controllers on one keyboard\n"
+            );
+            return 0;
+        }
     }
     printf(
         "NES Emulator  Copyright (C) 2025  filipemd\n"

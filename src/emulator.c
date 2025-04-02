@@ -63,8 +63,15 @@ void init_emulator(struct Emulator* emulator, int argc, char *argv[]){
     }
 
     char* genie = NULL;
-    if(argc == 3 || argc == 5)
-        genie = argv[argc - 1];
+    
+    emulator->settings.multiple_controllers_in_one_keyboard=false;
+    for(int i=0; i < argc; i++) {
+        if (strcmp(argv[i], "-genie")==0) {
+            genie=argv[i+1];
+        } else if (strcmp(argv[i], "--multiplayer")==0) {
+            emulator->settings.multiple_controllers_in_one_keyboard=true;
+        }
+    }
 
     load_file(argv[1], genie, &emulator->mapper);
     emulator->type = emulator->mapper.type;

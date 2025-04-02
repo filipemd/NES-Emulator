@@ -43,6 +43,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+
 #include <SDL2/SDL.h>
 
 typedef enum KeyPad{
@@ -63,10 +65,11 @@ typedef struct JoyPad{
     uint8_t index;
     uint16_t status;
     uint8_t player;
+    bool multiple_controllers_in_one_keyboard;
 } JoyPad;
 
 
-void init_joypad(struct JoyPad* joyPad, uint8_t player);
+void init_joypad(struct JoyPad* joyPad, uint8_t player, bool multiple_controllers_in_one_keyboard);
 uint8_t read_joypad(struct JoyPad* joyPad);
 void write_joypad(struct JoyPad* joyPad, uint8_t data);
 void update_joypad(struct JoyPad* joyPad, SDL_Event* event);
