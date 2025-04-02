@@ -1,14 +1,3 @@
-roms/
-Makefile
-dist/
-cmake-build-*/
 build/
-vendor/
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Debug/
-.vs/
-.idea/
-x64/
-x86/
+test_roms/
+nes
