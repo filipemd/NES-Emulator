@@ -46,8 +46,8 @@
 #include "mapper.h"
 #include "apu.h"
 #include "utils.h"
-#include <SDL_rwops.h>
-#include <SDL.h>
+#include <SDL2/SDL_rwops.h>
+#include <SDL2/SDL.h>
 
 #define NSF_HEADER_SIZE 0x80
 #define TEXT_FIELD_SIZE 32

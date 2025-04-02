@@ -42,7 +42,7 @@
 
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define MAX_PADS 2
 #define CONTROLLER_KEY_COUNT 10

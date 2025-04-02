@@ -44,7 +44,7 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))

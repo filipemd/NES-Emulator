@@ -43,7 +43,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 typedef enum KeyPad{
     TURBO_B     = 1 << 9,
