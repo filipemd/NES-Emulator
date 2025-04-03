@@ -5,7 +5,25 @@ Fork de [https://github.com/ObaraEmmanuel/NES](https://github.com/ObaraEmmanuel/
 Meu objetivo com esse emulador é aprender um pouco mais sobre programação adicionando algumas funcionalidades não presentes no código, além de, talvez, reescrever parte do projeto em Rust. O projeto original usa a licensa MIT; entretanto, este usa a licensa GPL.
 
 Mudanças feitas ao programa original:
- - Suporte a salvar o jogo.
+ - Suporte a salvar o jogo;
+ - Suporte a dois controles com um único teclado.
+
+### Teclas:
+
+| Ação            | Teclas no Modo Singleplayer | Teclas do Jogador 1 | Teclas do Jogador 2 |
+|-----------------|----------------------------|---------------------|---------------------|
+| **Direita**     | Seta para a direita (`→`) | `D`                 | `L`                 |
+| **Esquerda**    | Seta para a esquerda (`←`) | `A`                 | `J`                 |
+| **Cima**        | Seta para cima (`↑`)      | `W`                 | `I`                 |
+| **Baixo**       | Seta para baixo (`↓`)     | `S`                 | `K`                 |
+| **Start**       | `Enter`                     | `Tab`               | `Enter`             |
+| **Select**      | `Shift Direito`              | `Shift Esquerdo`    | `Shift Direito`     |
+| **Botão A**     | `J`                          | `Q`                 | `U`                 |
+| **Botão B**     | `K`                          | `E`                 | `O`                 |
+| **Turbo A**     | `H`                          | `Z`                 | `N`                 |
+| **Turbo B**     | `L`                          | `C`                 | `M`                 |
+
+Caso queira adaptar as teclas ao seu gosto, você pode modificar o arquivo `src/controller.c` e modificar as funções `generic_keyboard_mapper`, `player1_keyboard_mapper` e `player2_keyboard_mapper`
 
 README.md original:
 

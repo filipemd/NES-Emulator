@@ -73,7 +73,7 @@ void write_joypad(struct JoyPad* joyPad, uint8_t data){
 
 
 // Se apenas um controle for utilizado
-uint16_t generic_keyboard_mapper(SDL_Event* event) {
+static uint16_t generic_keyboard_mapper(SDL_Event* event) {
     switch (event->key.keysym.sym) {
         case SDLK_RIGHT:
             return RIGHT;
@@ -101,7 +101,7 @@ uint16_t generic_keyboard_mapper(SDL_Event* event) {
     return 0;
 }
 
-uint16_t player1_keyboard_mapper(SDL_Event* event) {
+static uint16_t player1_keyboard_mapper(SDL_Event* event) {
     switch (event->key.keysym.sym) {
         case SDLK_d:
             return RIGHT;
