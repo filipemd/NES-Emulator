@@ -129,7 +129,7 @@ static uint16_t player1_keyboard_mapper(SDL_Event* event) {
     return 0;
 }
 
-uint16_t player2_keyboard_mapper(SDL_Event* event) {
+static uint16_t player2_keyboard_mapper(SDL_Event* event) {
     switch (event->key.keysym.sym) {
         case SDLK_l:
             return RIGHT;
