@@ -1,31 +1,31 @@
 # NES Emulator
 
-Fork of [https://github.com/ObaraEmmanuel/NES](https://github.com/ObaraEmmanuel/NES).
+Fork de [https://github.com/ObaraEmmanuel/NES](https://github.com/ObaraEmmanuel/NES).
 
-My goal with this emulator is to learn a bit more about programming by adding some features not present in the original code, as well as possibly rewriting part of the project in Rust. The original project uses the MIT license; however, this one uses the GPL license.
+Meu objetivo com esse emulador é aprender um pouco mais sobre programação adicionando algumas funcionalidades não presentes no código, além de, talvez, reescrever parte do projeto em Rust. O projeto original usa a licensa MIT; entretanto, este usa a licensa GPL.
 
-Changes made to the original program:
- - Support for saving the game;
- - Support for two controllers with a single keyboard.
+Mudanças feitas ao programa original:
+ - Suporte a salvar o jogo;
+ - Suporte a dois controles com um único teclado.
 
-### Keys:
+### Teclas:
 
-| Action           | Singleplayer Mode Keys    | Player 1 Keys        | Player 2 Keys        |
-|------------------|---------------------------|----------------------|----------------------|
-| **Right**        | Right arrow (`→`)         | `D`                  | `L`                  |
-| **Left**         | Left arrow (`←`)          | `A`                  | `J`                  |
-| **Up**           | Up arrow (`↑`)            | `W`                  | `I`                  |
-| **Down**         | Down arrow (`↓`)          | `S`                  | `K`                  |
-| **Start**        | `Enter`                   | `Tab`                | `Enter`              |
-| **Select**       | `Right Shift`               | `Left Shift`           | `Right Shift`          |
-| **Button A**     | `J`                       | `Q`                  | `U`                  |
-| **Button B**     | `K`                       | `E`                  | `O`                  |
-| **Turbo A**      | `H`                       | `Z`                  | `N`                  |
-| **Turbo B**      | `L`                       | `C`                  | `M`                  |
+| Ação            | Teclas no Modo Singleplayer | Teclas do Jogador 1 | Teclas do Jogador 2 |
+|-----------------|----------------------------|---------------------|---------------------|
+| **Direita**     | Seta para a direita (`→`) | `D`                 | `L`                 |
+| **Esquerda**    | Seta para a esquerda (`←`) | `A`                 | `J`                 |
+| **Cima**        | Seta para cima (`↑`)      | `W`                 | `I`                 |
+| **Baixo**       | Seta para baixo (`↓`)     | `S`                 | `K`                 |
+| **Start**       | `Enter`                     | `Tab`               | `Enter`             |
+| **Select**      | `Shift Direito`              | `Shift Esquerdo`    | `Shift Direito`     |
+| **Botão A**     | `J`                          | `Q`                 | `U`                 |
+| **Botão B**     | `K`                          | `E`                 | `O`                 |
+| **Turbo A**     | `H`                          | `Z`                 | `N`                 |
+| **Turbo B**     | `L`                          | `C`                 | `M`                 |
 
-If you want to adjust the keys to your liking, you can modify the `src/controller.c` file and edit the `generic_keyboard_mapper`, `player1_keyboard_mapper`, and `player2_keyboard_mapper` functions.
+Caso queira adaptar as teclas ao seu gosto, você pode modificar o arquivo `src/controller.c` e modificar as funções `generic_keyboard_mapper`, `player1_keyboard_mapper` e `player2_keyboard_mapper`
 
-Original README.md:
+README.md original:
 
 # An NES emulator written in pure C
 

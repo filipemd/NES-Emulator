@@ -56,7 +56,9 @@ int main(int argc, char *argv[]){
                 "Options:\n"
                 "  --help                     Show this help message\n"
                 "  -genie <file>              Specify the genie file to load\n"
+                "  -save <file>               Specify file to save\n"
                 "  --multiplayer              Enable multiple controllers on one keyboard\n"
+                "  --no-save                  Disable saving the game\n"
             );
             return 0;
         }

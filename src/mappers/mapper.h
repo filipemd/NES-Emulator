@@ -126,7 +126,7 @@ typedef struct Mapper{
     struct Emulator* emulator;
 } Mapper;
 
-void load_file(char* file_name, char* game_genie, Mapper* mapper);
+void load_file(char* file_name, char* game_genie, char* save_file, Mapper* mapper);
 void free_mapper(struct Mapper* mapper);
 void set_mirroring(Mapper* mapper, Mirroring mirroring);
 

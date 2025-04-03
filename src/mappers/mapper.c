@@ -47,10 +47,9 @@
 #include "mapper.h"
 #include "emulator.h"
 #include "genie.h"
-#include "utils.h"
 #include "nsf.h"
 
-static char* save_file_name;
+static char* save_file_path;
 
 static void select_mapper(Mapper*  mapper);
 static void set_mapping(Mapper* mapper, uint16_t tr, uint16_t tl, uint16_t br, uint16_t bl);
@@ -219,12 +218,8 @@ static void write_CHR(Mapper* mapper, uint16_t address, uint8_t value){
 }
 
 
-void load_file(char* file_name, char* game_genie, Mapper* mapper){
-    char *basename_file_name = get_file_name(file_name);
-
-    const size_t save_file_name_size = strlen(basename_file_name)+5;
-    save_file_name = calloc(save_file_name_size, sizeof(basename_file_name[0]));
-    snprintf(save_file_name, save_file_name_size, "%s.sav", basename_file_name);
+void load_file(char* file_name, char* game_genie, char* save_file, Mapper* mapper) {
+    save_file_path = save_file;
 
     SDL_RWops *file;
     file = SDL_RWFromFile(file_name, "rb");
@@ -380,7 +375,8 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
         /*
             Carrega o jogo se ele exisitr
         */
-        FILE *file = fopen(save_file_name, "rb");
+        if (save_file_path!=NULL) {
+        FILE *file = fopen(save_file_path, "rb");
         if (file == NULL || !mapper->have_battery_backed_sram) {
             memset(mapper->PRG_RAM, 0, mapper->RAM_size);
         } else {
@@ -388,7 +384,9 @@ void load_file(char* file_name, char* game_genie, Mapper* mapper){
                 LOG(ERROR, "Error loading save file!\n");
                 return;
             }
+            LOG(INFO, "Loading game save from %s", save_file_path);
             fclose(file);
+        }
         }
     }
 
@@ -456,15 +454,16 @@ void free_mapper(Mapper* mapper){
         free(mapper->CHR_ROM);
     if(mapper->PRG_RAM != NULL) {
         // Apenas se o cartucho tiver a capacidade de salvar jogos
-        if (mapper->have_battery_backed_sram) {
+        if (mapper->have_battery_backed_sram && save_file_path != NULL) {
             /*
                 Salva o jogo se ele exisitr
             */
-            FILE *file = fopen(save_file_name, "wb");
+            FILE *file = fopen(save_file_path, "wb");
             if (file == NULL) {
                 perror("Failed to open save file");
             } else {
                 fwrite(mapper->PRG_RAM, 1, mapper->RAM_size, file);
+                LOG(INFO, "Saving game in %s", save_file_path);
 
                 fclose(file);
             }

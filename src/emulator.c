@@ -41,6 +41,7 @@
 
 
 #include <SDL2/SDL.h>
+#include <stdbool.h>
 
 #include "emulator.h"
 #include "gamepad.h"
@@ -62,18 +63,50 @@ void init_emulator(struct Emulator* emulator, int argc, char *argv[]){
         quit(EXIT_FAILURE);
     }
 
+    char* rom_file = argv[1];
     char* genie = NULL;
+    char* save_file = NULL;
+
+    bool no_save=false;
     
     emulator->settings.multiple_controllers_in_one_keyboard=false;
-    for(int i=0; i < argc; i++) {
-        if (strcmp(argv[i], "-genie")==0) {
-            genie=argv[i+1];
-        } else if (strcmp(argv[i], "--multiplayer")==0) {
-            emulator->settings.multiple_controllers_in_one_keyboard=true;
+    for (int i = 2; i < argc; i++) {
+        if (strcmp(argv[i], "-genie") == 0) {
+            if (i + 1 < argc) {
+                genie = argv[++i];
+            } else {
+                LOG(ERROR, "-genie option requires an argument");
+                quit(EXIT_FAILURE);
+            }
+        } else if (strcmp(argv[i], "-save") == 0) {
+            if (i + 1 < argc) {
+                save_file = argv[++i];
+            } else {
+                LOG(ERROR, "-save option requires an argument");
+                quit(EXIT_FAILURE);
+            }
+        } else if (strcmp(argv[i], "--multiplayer") == 0) {
+            emulator->settings.multiple_controllers_in_one_keyboard = true;
+        } else if (strcmp(argv[i], "--no-save") == 0) {
+            no_save = true;
+        } else {
+            LOG(ERROR, "Unknown option: %s", argv[i]);
+            quit(EXIT_FAILURE);
         }
+    }    
+
+    // Se o arquivo de save não for definido explicitamente
+    if (save_file == NULL && !no_save) {
+        // Apenas o arquivo, sem diretórios. Ex: "foo/bar.txt" => "bar.txt"
+        char *basename_file_name = get_file_name(rom_file);
+
+        const size_t save_file_name_size = strlen(basename_file_name)+5;
+        save_file = calloc(save_file_name_size, sizeof(basename_file_name[0]));
+        snprintf(save_file, save_file_name_size, "%s.sav", basename_file_name);
     }
 
-    load_file(argv[1], genie, &emulator->mapper);
+    load_file(rom_file, genie, save_file, &emulator->mapper);
+
     emulator->type = emulator->mapper.type;
     emulator->mapper.emulator = emulator;
     if(emulator->type == PAL) {
