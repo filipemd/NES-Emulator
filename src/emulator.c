@@ -311,7 +311,6 @@ void run_NSF_player(struct Emulator* emulator) {
     // initialize for the first song
     init_song(emulator, nsf->current_song);
 
-
     while (!emulator->exit) {
         mark_start(timer);
         while (SDL_PollEvent(&e)) {

@@ -427,7 +427,6 @@ static uint16_t render_sprites(PPU* restrict ppu, uint16_t bg_addr, uint8_t* res
 
         if (!palette_addr)
             continue;
-
         palette_addr |= 0x10 | ((attr & 0x3) << 2);
         *back_priority = attr & BIT_5;
 
