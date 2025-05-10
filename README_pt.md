@@ -3,6 +3,7 @@
 Fork de [https://github.com/ObaraEmmanuel/NES](https://github.com/ObaraEmmanuel/NES).
 
 ![CelesteNES](resources/celeste-nes.png)
+
 _Imagem deste emulador rodando o jogo homebrew de NES [Celeste NES](https://github.com/iProgramMC/CelesteNES)._
 
 Meu objetivo com esse emulador é aprender um pouco mais sobre programação adicionando algumas funcionalidades não presentes no código O projeto original usa a licensa MIT; entretanto, este usa a licensa GPL.
