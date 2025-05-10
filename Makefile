@@ -35,10 +35,10 @@ clean:
 
 # Install target (optional, if you want to install the executable)
 install: $(TARGET)
-	cp $(TARGET) /usr/local/bin/
+	cp $(TARGET) $(PREFIX)/bin/
 
 # Uninstall target to remove the executable
 uninstall:
-	rm -f /usr/local/bin/$(TARGET)
+	rm -f $(PREFIX)/bin/$(TARGET)
 
 .PHONY: all clean install uninstall
